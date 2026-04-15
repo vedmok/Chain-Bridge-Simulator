@@ -1,0 +1,700 @@
+PROJECT: ChainBridge SCF Command Simulator — Enterprise Edition
+TYPE: WebGL-accelerated interactive supply chain network simulator
+ARCHITECTURE: React + react-force-graph-2d (WebGL) + XState + GSAP + deck.gl
+
+This is a production-grade, GPU-accelerated supply chain finance 
+simulator. Not a dashboard. Not a chart app. A live command center 
+that a J.P. Morgan coverage head could use in an actual operations 
+room. Every visual choice must reflect this.
+
+──────────────────────────────────────────
+CORE ARCHITECTURE — NON-NEGOTIABLE
+──────────────────────────────────────────
+
+PRIMARY GRAPH ENGINE:
+  react-force-graph-2d
+  
+  This is WebGL-accelerated via HTML5 Canvas. NOT SVG. NOT React Flow.
+  It handles particle flow along edges natively via 
+  linkDirectionalParticles and linkDirectionalParticleSpeed.
+  Nodes are rendered via custom canvasObject callbacks — full 
+  canvas 2D API control per node.
+  This is the library used in production network intelligence tools.
+
+SIMULATION STATE MACHINE:
+  XState v5
+  
+  The simulation is a proper finite state machine, not ad-hoc 
+  useState logic. States:
+    idle → running → event_processing → cascading → 
+    recovering → stable
+  
+  Each stress event is an XState event that triggers a transition.
+  ChainBridge intervention is a separate machine that runs in 
+  parallel, consuming signals and producing intervention events.
+  This architecture means the simulation behaves predictably and 
+  can be stepped backward/forward (undo/redo of simulation ticks).
+
+ANIMATION ENGINE:
+  GSAP 3 (GreenSock) — for all timeline-based animations
+  Framer Motion — for panel slide-ins and modal transitions only
+  requestAnimationFrame — for the simulation tick loop
+  
+  GSAP is not optional. Every stress cascade, every recovery wave, 
+  every health meter update must go through a GSAP timeline.
+  This produces professional easing curves that Framer Motion 
+  and CSS transitions cannot match.
+
+GLOBAL STATE:
+  Zustand with Immer middleware
+  All simulation state in one store, all mutations immutable.
+
+CHARTS INSIDE PANELS:
+  Nivo (not Recharts) — for the sparklines, bar charts, and 
+  arc meters in side panels.
+  Nivo renders with D3 under the hood and has motion support 
+  out of the box.
+
+GEOGRAPHIC BASE LAYER:
+  Render a simplified SVG APAC region map as the canvas background.
+  Use a dark political boundary outline of APAC with:
+    Singapore, India, Vietnam, Hong Kong labeled
+  Scale is not geographic precision — it is schematic.
+  Position supplier nodes loosely by corridor geography.
+  Anchor nodes float above the geographic layer in the upper half.
+  
+  The effect: the simulator looks like it is operating on a real 
+  region, not an abstract graph.
+
+SIMULATION ENGINE IN WEB WORKER:
+  The tick calculation runs in a Web Worker (worker.js) so the 
+  main thread is never blocked. The main thread only handles 
+  render and interaction. Worker posts state diffs on each tick.
+  This ensures the graph never stutters during stress cascades.
+
+──────────────────────────────────────────
+DESIGN SYSTEM — ENTERPRISE DARK THEME
+──────────────────────────────────────────
+
+Canvas Background:
+  Radial gradient: #0A1628 (center) → #050D1A (edges)
+  Subtle grid overlay: 1px lines at 60px intervals, opacity 4%
+  This is the Bloomberg Terminal base aesthetic.
+
+Panel Background:
+  backdrop-filter: blur(24px) saturate(180%)
+  background: rgba(15, 23, 42, 0.85)
+  border: 1px solid rgba(148, 163, 184, 0.08)
+  border-radius: 12px
+  box-shadow: 0 0 40px rgba(0, 48, 135, 0.15)
+  
+  Panels are glassmorphic. Subtle, not startup-flashy.
+  They float over the canvas with visible graph behind them.
+
+Accent Glow System:
+  Healthy state:   #00FF87 (neon green) — used at 40% opacity for 
+                   glows only, never as fill
+  At-risk state:   #FFB800 (amber) — glow only
+  Critical state:  #FF4444 (red) — glow only
+  JPM Blue:        #003087 — anchor node fill
+  
+  Every glowing element uses CSS box-shadow with spread:
+  box-shadow: 0 0 12px 2px [color at 60%], 
+              0 0 40px 8px [color at 20%]
+  
+  This produces the halo effect seen in professional command centers.
+
+Typography:
+  Primary: "Inter" — headings and labels
+  Monospace: "JetBrains Mono" from Google Fonts — all numeric 
+             values, IDs, percentages, currency
+  Never mix these two families on the same line.
+
+Custom Scrollbars (all panels):
+  width: 4px
+  background: transparent
+  thumb: rgba(148, 163, 184, 0.2)
+  thumb hover: rgba(148, 163, 184, 0.4)
+
+──────────────────────────────────────────
+NODE DESIGN — CANVAS RENDERING
+──────────────────────────────────────────
+All nodes rendered via react-force-graph-2d canvasObject callback.
+Every node is drawn with canvas 2D API — no DOM elements.
+
+ANCHOR NODES:
+  Outer ring: 52px radius, stroke #003087, lineWidth 2, 
+              with rotating dashed arc (ctx.setLineDash([8,4]),
+              increment dashOffset on each frame for rotation effect)
+  Inner fill: 44px radius, fill #003087
+  Center text: Anchor name, 2 lines, white, Inter bold 11px
+  
+  When DPO > 60: outer ring color shifts to #FFB800, 
+                 rotation speed doubles
+  
+  Top indicator: small pill badge with supplier count
+  
+  Glow: box-shadow equivalent drawn as radial gradient 
+        on canvas behind node, radius 80px, 
+        rgba(0,48,135,0.3) → transparent
+
+TIER 1 SUPPLIER NODES (36px radius):
+  Circle fill: #0060A9
+  Inner ring: 30px radius, rgba(255,255,255,0.1)
+  Flag rendered as canvas text (emoji) at top-left offset
+  Status dot: 6px circle at bottom-right, color per state
+  
+  Healthy: bright #00FF87 dot with 12px green glow
+  At-risk: #FFB800 dot, pulsing opacity (sin wave, 1.5s period)
+  Critical: #FF4444 dot, fast pulse (0.6s period)
+  Dormant: #6B7280 dot, static
+
+TIER 2 NODES (28px radius):
+  Fill: #B5984A (gold)
+  Same structure, smaller
+
+TIER 3 NODES (20px radius):
+  Fill: #4A6FA5
+  No inner ring (too small)
+  Just fill + status dot + flag emoji
+
+SYSTEMIC NODES:
+  Additional outer pulse ring drawn with GSAP-controlled alpha.
+  Ring radius oscillates 1.2x to 1.8x node radius.
+  Ring color: #FFB800
+  strokeWidth: 1.5px
+  This is the most visually distinctive node type on the canvas.
+
+COMPETITOR NODE:
+  Dashed circle border, no fill
+  Label: "Competitor Bank" 
+  Fill: rgba(107,114,128,0.2)
+  Position: locked far right
+  When displacement events fire, a particle stream flows 
+  FROM displaced suppliers TOWARD this node (react-force-graph 
+  directional particles, color grey, speed 0.003)
+
+──────────────────────────────────────────
+EDGE DESIGN — PARTICLE FLOW
+──────────────────────────────────────────
+
+All edges use react-force-graph-2d's built-in:
+  linkDirectionalParticles
+  linkDirectionalParticleWidth
+  linkDirectionalParticleSpeed
+  linkDirectionalParticleColor
+
+HEALTHY EDGE:
+  linkColor: rgba(0, 255, 135, 0.25)
+  linkWidth: proportional to weight_wij, range 1–5px
+  linkDirectionalParticles: 4
+  linkDirectionalParticleWidth: 2
+  linkDirectionalParticleSpeed: 0.004
+  linkDirectionalParticleColor: #00FF87
+  
+  Effect: green particles flow FROM supplier TOWARD anchor, 
+          representing invoice financing volume moving up the chain.
+
+AT-RISK EDGE:
+  linkColor: rgba(255,184,0, 0.3)
+  linkDirectionalParticles: 2
+  linkDirectionalParticleSpeed: 0.002
+  linkDirectionalParticleColor: #FFB800
+  Particles slow down — visually implies stress, reduced flow.
+
+BROKEN / CRITICAL EDGE:
+  linkColor: rgba(255,68,68,0.5)
+  linkDirectionalParticles: 0
+  linkDashPattern: [4, 4] — custom rendering via canvasLinkObject
+  No particles. The broken flow is communicated by absence.
+
+DISPLACED EDGE (to Competitor):
+  linkColor: rgba(107,114,128,0.35)
+  linkDirectionalParticles: 3
+  linkDirectionalParticleSpeed: 0.006  (faster — volume actively leaving)
+  linkDirectionalParticleColor: #9CA3AF
+  Particle direction: TOWARD competitor node
+
+MULTI-ANCHOR EDGES:
+  Suppliers connected to 3+ anchors: edges rendered as curved 
+  bezier links (use react-force-graph curvature property, 0.2–0.4)
+  This prevents edge crossings from obscuring the concentration 
+  pattern and makes the network structure legible.
+
+──────────────────────────────────────────
+GSAP STRESS CASCADE ANIMATION
+──────────────────────────────────────────
+
+When a stress event fires (any scenario trigger):
+
+1. GSAP timeline starts immediately.
+
+2. Step 1 (0ms): The triggering node pulses.
+   GSAP to: {scale: 1.4, duration: 0.2, yoyo: true, repeat: 1}
+   Achieved by modifying the node radius in the render function.
+
+3. Step 2 (200ms): Edges from that node transition to at-risk.
+   GSAP staggerTo: each connected edge's color property, 
+   stagger: 0.08s per edge, duration: 0.3s
+   
+4. Step 3 (400ms + stagger): Connected anchor nodes receive 
+   a ripple — their outer ring briefly flares to amber.
+   GSAP to: ringOpacity 1 → amber glow → back, duration 0.6s
+
+5. Step 4 (Cross-anchor contagion only): 
+   For each other supplier connected to the same anchors:
+   GSAP staggerTo with stagger 0.05s, amber ripple on each node.
+   Total cascade takes 800–1200ms depending on network depth.
+   This is the money animation. The cascade should look like 
+   a visible shockwave moving through the supply chain.
+
+6. Recovery (ChainBridge Active):
+   Reverse timeline: green particles re-appear on edges one by one.
+   GSAP staggerTo: edges recover with stagger 0.12s.
+   Node status dots flip green with a brief white flash (0.1s).
+   Programme Health Meters animate up with GSAP to: progress values.
+   
+   Total recovery animation: 3–4 seconds, feels earned.
+
+──────────────────────────────────────────
+LEFT PANEL: SIGNAL FEED
+──────────────────────────────────────────
+
+Panel title: "Signal Feed" with a live pulsing dot (CSS animation)
+Height: 55% of panel height
+Overflow: scroll with custom scrollbar
+
+Each signal card (Framer Motion initial: opacity 0, y: -12 
+animate: opacity 1, y: 0, duration 0.25s):
+  
+  Left accent bar: 3px wide, color coded by signal type
+  Top row: [Signal Icon] [Supplier ID in JetBrains Mono] 
+           [Corridor Flag] [Time elapsed "2m ago"]
+  Middle row: Signal type badge (pill, outlined)
+  Bottom row: One-line plain English description
+
+  Signal cards stack from top. Max 15 visible. Auto-scroll 
+  with smooth scrollIntoView on new items.
+  
+  On hover: card background lifts to rgba(30,41,59,0.9), 
+            cursor: pointer
+  On click: 
+    → Zoom graph camera to that supplier node 
+      (react-force-graph zoomToFit or centerAt)
+    → Node gets 3-second white ring pulse
+    → Right panel switches to Node Inspector for that supplier
+
+Signal color coding:
+  Displacement:       left bar #FF4444, icon TrendingDown
+  Utilisation drop:   left bar #FFB800, icon AlertTriangle
+  Cross-anchor stress:left bar #FF4444, icon Network
+  Onboarding stall:   left bar #60A5FA, icon Clock
+  DPO stretch:        left bar #FFB800, icon Calendar
+  Dormant flagged:    left bar #6B7280, icon UserX
+  Intervention fired: left bar #00FF87, icon Zap
+  Recovery confirmed: left bar #00FF87, icon CheckCircle
+
+──────────────────────────────────────────
+LEFT PANEL: RM ACTION QUEUE
+──────────────────────────────────────────
+
+Panel title: "RM Queue" + animated count badge 
+Height: 45% of panel height
+
+Each queue item:
+  Urgency indicator: left border 4px, red if Brief&HandOff, 
+                     amber if Rec&Choose
+  Supplier ID + Tier badge (T1/T2/T3)
+  Action type in bold
+  Time since signal fired (JetBrains Mono, red if > 48h)
+  
+  Row buttons:
+    [▶ Act]  → Opens Intervention Modal
+    [—]      → Snooze 24h (item greys out, returns tomorrow)
+    [↑]      → Escalate immediately (fires Brief & Hand Off)
+
+Queue items animate in with Framer Motion slide from bottom.
+When actioned, item animates out (height collapse, opacity fade, 
+green flash on the border — GSAP, 400ms).
+
+──────────────────────────────────────────
+RIGHT PANEL
+──────────────────────────────────────────
+
+Tabs at top of panel (3 tabs, pill selector):
+  [Inspector] [Scenarios] [Programme Health]
+
+TAB 1 — NODE INSPECTOR:
+
+Default state (nothing selected):
+  Show a subtle prompt: "Click any node to inspect"
+  Behind it: a faint arc chart showing programme-wide UR distribution
+
+When ANCHOR clicked:
+  Animated slide-in (Framer Motion, x: 20 → 0, 0.2s)
+  
+  Header section:
+    Anchor logo placeholder (circle with anchor initial, JPM blue)
+    Name, subtitle "Anchor — [corridor]"
+    Connected suppliers count, active vs at-risk split
+  
+  Nivo ResponsiveBar (horizontal):
+    Top 6 suppliers by financed volume, bars colored by health state
+    Minimal Nivo theme matching dark design system
+    No grid lines. No axis titles. Just bars and labels.
+  
+  DPO control:
+    Current DPO in large JetBrains Mono text
+    +/- stepper (click + to increase by 5 days)
+    As DPO crosses 60: value turns amber, warning badge appears
+    As DPO crosses 75: value turns red, cascade trigger fires
+  
+  Metrics grid (2 columns):
+    Programme Volume | At-Risk Volume
+    Activation Rate  | Displacement Count
+    Systemic Nodes   | Avg Concentration Risk
+
+When SUPPLIER clicked:
+  Header:
+    Supplier ID (large, JetBrains Mono)
+    Tier badge + Corridor flag + State badge
+    
+  Nivo ResponsiveLine sparkline:
+    6-month utilisation trend from gap1 CSV
+    Green line if trending up, red if trending down
+    Reference line at 40% threshold (amber dashed)
+    Height: 80px, minimal labels
+  
+  Metric grid (3x2):
+    UR: [XX.X%]        Eligible Vol: [$XXK]
+    Financed Vol: [$XXK] Taulia Logins: [XX]
+    Anchors: [X]       CR: [X.XX]
+  
+  Entity Resolution card:
+    Pass 1 or Pass 2 indicator
+    If Pass 2: JW Score shown with mini progress bar, 
+               red line at 0.85 threshold
+    NPV status: green pill "NPV+" or red pill "NPV-"
+  
+  Active Signals section:
+    List of currently active signals for this supplier
+    Each as a mini badge row
+  
+  Action buttons (4 buttons in 2x2 grid):
+    [Send Benefit Calculator]   Auto-Execute, green border
+    [Offer Rate Reduction]      Rec & Choose, amber border  
+    [Request Limit Review]      Rec & Choose, amber border
+    [Escalate to Coverage Head] Brief & HO, red border
+
+TAB 2 — SCENARIO CONTROLS:
+
+Title: "Stress Scenarios"
+Subtitle: "Trigger supply chain events to test ChainBridge response"
+
+5 scenario cards, each:
+  Icon (Lucide) + Title + One-line description
+  Severity badge: LOW / MEDIUM / HIGH / CRITICAL
+  [Trigger] button — outlined, full width of card
+  
+  Card hover: subtle border glow in scenario color
+
+Scenarios:
+  1. Anchor DPO Stretch          [MEDIUM]
+     Anchor selector dropdown above trigger button.
+     DPO for selected anchor increases +20 days.
+     All connected suppliers show UR decline over next 3 ticks.
+
+  2. Competitor Rate War          [HIGH]
+     6 random T2 suppliers begin displacement sequence.
+     Grey particle streams appear flowing to Competitor node.
+     Signal Feed floods with displacement alerts.
+     
+  3. Onboarding Backlog           [MEDIUM]
+     All T3 suppliers freeze. Nodes grey out.
+     Onboarding stall signals fire in rapid succession.
+     Programme Health "Onboarding Efficiency" meter drops.
+
+  4. Cross-Anchor Contagion       [CRITICAL]
+     1 systemic node enters stress.
+     GSAP cascade wave propagates outward to all connected anchors.
+     Then second-degree suppliers of those anchors show amber ripple.
+     This is the Gap 4 visual demonstration.
+     Red alert banner appears at top of canvas:
+     "SYSTEMIC NODE STRESS DETECTED — Cross-anchor exposure active"
+
+  5. ✦ ChainBridge Active          [INTERVENTION]
+     Different visual treatment — button is JPM navy fill, 
+     gold border, "ChainBridge" logo mark.
+     Triggers full decision engine.
+     See CHAINBRIDGE ACTIVE sequence below.
+
+TAB 3 — PROGRAMME HEALTH:
+
+Five gap health meters as arc gauges (Nivo ResponsiveRadialBar):
+  Each gap gets its own arc gauge, 5 arranged in a grid
+  
+  Gap 1 — Signal Coverage:     % suppliers with active monitoring
+  Gap 2 — Onboarding Speed:    inverse days (100% = 2 days, 0% = 18d)
+  Gap 3 — Portfolio UR:        avg utilisation rate
+  Gap 4 — Network Resilience:  inverse avg concentration risk
+  Gap 5 — Retention Rate:      % at-risk suppliers with intervention
+
+  Color:
+    > 70%: #00FF87
+    40–70%: #FFB800
+    < 40%: #FF4444
+
+  Below gauges: a single Nivo ResponsiveLine chart
+    Title: "Programme Health — 6-Week Trend"
+    5 lines, one per gap
+    Minimal axes, dark theme
+    Shows how health scores evolve as simulation runs
+
+──────────────────────────────────────────
+CHAINBRIDGE ACTIVE — FULL SEQUENCE
+──────────────────────────────────────────
+
+When user hits [ChainBridge Active]:
+
+Tick 0 (immediate):
+  Top header bar changes:
+    Center text: "CHAINBRIDGE ACTIVE — Decision Engine Running"
+    Pulsing JPM blue gradient behind center text (GSAP loop)
+
+Tick 1 (1 real second):
+  All dormant/unaware suppliers:
+    → Blue spark animation on node (GSAP scale pulse)
+    → "Benefit Calculator Sent" signal fires in Signal Feed
+    → Node status dot changes from grey to amber 
+      (now engaged, not yet converting)
+  
+  Auto-Execute actions fire automatically:
+    → Green "Auto-Execute Fired" signals appear in Signal Feed
+    → Small green lightning bolt icon briefly overlays each node
+
+Tick 2 (2 real seconds):
+  Recommend & Choose actions appear in RM Queue:
+    → Displaced suppliers: intervention card appears in queue
+    → Constrained suppliers: limit review card appears
+    → Queue count badge animates up
+
+Tick 3 (3 real seconds):
+  Assume RM has actioned the queue (or simulate it):
+    → Edge particles on at-risk edges begin transitioning:
+       amber → green, GSAP staggerTo 0.15s per edge
+    → Utilisation rates begin climbing on affected nodes:
+       UR values update in JetBrains Mono with a green 
+       +X.X% delta briefly showing next to the value
+    → Programme Health arc gauges animate upward 
+       (GSAP to: new values, ease: power2.out, duration: 1.2s)
+
+Tick 4 (4 real seconds):
+  Full network recovery wave:
+    → Remaining red/amber edges transition to green
+    → GSAP staggerTo with stagger 0.08s creates a visible 
+       recovery wave moving through the network
+    → Particle flow speed increases on recovering edges 
+       (linkDirectionalParticleSpeed updates)
+    → All health meters reach new stable higher values
+
+Tick 5 (5 real seconds):
+  "ChainBridge Outcome" summary card slides in from bottom:
+    (Framer Motion, y: 100 → 0, spring physics)
+    Shows:
+      Suppliers Reactivated: XX
+      Displacements Prevented: XX
+      Est. Volume Retained: $XXK
+      RM Decision Time: <48h
+    
+    Below: "Without ChainBridge" vs "With ChainBridge" 
+    two-column comparison in amber vs green text.
+    
+    This card auto-dismisses after 8 seconds or on any click.
+
+──────────────────────────────────────────
+INTERVENTION MODAL — PREMIUM VERSION
+──────────────────────────────────────────
+
+Framer Motion: scale 0.95 → 1, opacity 0 → 1, duration 0.2s
+backdrop: rgba(5,13,26,0.85) blur(8px)
+modal: 600px wide, glass card, border rgba(148,163,184,0.12)
+
+Layout (top to bottom):
+
+HEADER:
+  Left: Supplier ID (JetBrains Mono, 22px, white)
+        Tier + Corridor + State badges
+  Right: Urgency level (CRITICAL / HIGH / MEDIUM) in matching color
+
+SIGNAL CONTEXT:
+  Two columns, monospaced values:
+  Left:  ΔUtilisation: [XX.X%]     ΔTrade Volume: [XX.X%]
+  Right: At-Risk Volume: [$XXK]    Retention Value: [$XXX]
+  
+  Below: Classification box — amber bordered, shows:
+    "Engine Classification: COMPETITOR DISPLACED"
+    One sentence explanation of what this means commercially.
+
+RECOMMENDED ACTION:
+  Card with #003087 left border (3px):
+  ChainBridge recommendation in plain English
+  Expected outcome:
+    Nivo bullet chart or simple two-bar comparison:
+    "Act now" → [======== 37%] retention probability
+    "Wait 7d" → [== 12%] retention probability
+  
+  Time sensitivity: "Optimal window closes in ~5 days"
+  
+OPTION SELECTOR:
+  Three radio cards, styled:
+    Selected: border #003087, background rgba(0,48,135,0.15)
+    Unselected: border rgba(148,163,184,0.12)
+  
+  Option A: ChainBridge Rec (pre-selected, gold star indicator)
+  Option B: Alternative (rate-only or anchor outreach)
+  Option C: Monitor only (no action — field stays open)
+
+FOOTER:
+  Left: [Dismiss] — text button, secondary
+  Center: [Snooze 24h] — outlined amber
+  Right: [Confirm Action] — filled #003087, white text, 
+         hover: brightness 1.15, active: scale 0.98
+
+On Confirm:
+  Modal closes with reverse animation
+  GSAP: node on canvas gets green flash (0.3s)
+  Queue item collapses out
+  Signal: "Intervention Confirmed — [Supplier ID]" fires in feed
+
+──────────────────────────────────────────
+HEADER BAR — FULL SPEC
+──────────────────────────────────────────
+
+Height: 56px
+Background: rgba(5,13,26,0.95) with 1px bottom border 
+            rgba(148,163,184,0.08)
+
+Left section:
+  "⬡ ChainBridge" — hex icon + name, Inter semibold 16px
+  "|" divider in #1E293B
+  "SCF Command Simulator" — text-secondary, 13px
+  "J.P. Morgan" pill badge — JPM navy bg, white text, 10px
+
+Center section:
+  Simulation status:
+    IDLE: grey dot + "Awaiting Simulation"
+    RUNNING: green pulsing dot + "Live Simulation — Week [N]"
+    PAUSED: amber dot + "Paused — Week [N]"
+    CASCADING: red pulsing dot + "Stress Event Cascading"
+    RECOVERING: green breathing dot + "ChainBridge Recovering"
+
+Right section:
+  Simulation controls:
+    [◀◀] Step Back (undo last tick, XState history)
+    [▶ Run] / [⏸ Pause] — toggles
+    [▶▶] Step Forward (manual tick advance)
+    [↺ Reset] — resets to initial CSV state
+    [⛶ Present] — Presentation Mode toggle
+
+──────────────────────────────────────────
+PRESENTATION MODE — FULL SPEC
+──────────────────────────────────────────
+
+Toggle from header. Framer Motion layout animation for panel 
+collapse (width: 300px → 0px, duration 0.4s, ease: easeInOut).
+
+In Presentation Mode:
+  Both side panels collapse fully (not icon strip — full collapse)
+  Network map fills 100% of viewport minus header
+  
+  Floating annotation system:
+    5 numbered beacons [1] through [5] floating on the canvas
+    Each beacon: circle with number, JPM navy, white text
+    On hover/click: tooltip card expands from beacon showing:
+      Gap number + title + one-sentence explanation
+      Beacon positions:
+        [1] Near dormant supplier cluster — Gap 1: Reactive Monitoring
+        [2] Near a T3 node cluster — Gap 2: Onboarding Friction
+        [3] Near low-UR supplier group — Gap 3: Underutilisation
+        [4] Near multi-anchor supplier — Gap 4: Cross-Anchor Risk
+        [5] Near Competitor node — Gap 5: Displacement
+  
+  Bottom status ticker (fixed bottom of screen):
+    Scrolling ticker strip (CSS marquee via animation):
+    "Portfolio UR: XX% | Active Suppliers: XX | 
+     RM Queue: XX pending | Signals Fired: XX | 
+     Estimated At-Risk Revenue: $XXK | 
+     ChainBridge Status: ACTIVE / STANDBY"
+    
+    Ticker background: rgba(0,48,135,0.9)
+    Ticker text: white, JetBrains Mono 13px
+    Separators: gold ◆ between items
+
+  Node labels scale up to 14px in presentation mode.
+  Status dots scale up proportionally.
+
+──────────────────────────────────────────
+DATA LOADING + INITIALIZATION
+──────────────────────────────────────────
+
+Files in /public/data/:
+  gap1_programme_health.csv
+  gap2_onboarding_entity_resolution.csv
+  gap3_utilisation_classification.csv
+  gap4_cross_anchor_network.csv
+  gap5_displacement_detection.csv
+
+On app load:
+  1. Load all CSVs with PapaParse async
+  2. Build Zustand store:
+     - nodes: merged supplier profile from all 5 CSVs
+     - edges: from gap4 with weight_wij
+     - anchors: 5 anchor nodes from gap4 unique anchor_ids
+     - competitorNode: manually initialized
+  3. Initialize XState simulation machine in idle state
+  4. Pass graphData (nodes + links) to react-force-graph-2d
+
+react-force-graph-2d config:
+  dagMode: null (force-directed, not DAG)
+  d3AlphaDecay: 0.02 (slow physics settle = smooth layout)
+  d3VelocityDecay: 0.3
+  warmupTicks: 100 (pre-compute layout before render)
+  cooldownTicks: Infinity (keep physics running for drag)
+  nodeCanvasObject: custom function (full node rendering)
+  linkCanvasObjectMode: "after" for edge labels on hover
+  linkDirectionalParticles: dynamic per edge state
+  enableZoomInteraction: true
+  enablePanInteraction: true
+  minZoom: 0.3, maxZoom: 8
+
+──────────────────────────────────────────
+PERFORMANCE REQUIREMENTS
+──────────────────────────────────────────
+- Graph must run at 60fps with 200 nodes and 408 edges.
+  react-force-graph-2d handles this — do not add DOM nodes 
+  inside the canvas area. All node rendering via canvasObject.
+  
+- Simulation tick (Web Worker) must not block render thread.
+  Worker communicates via postMessage with state diffs only 
+  (not full state on each tick).
+
+- GSAP animations must use will-change: transform where applicable.
+
+- Nivo charts inside panels must use isInteractive: false 
+  on sparklines to prevent unnecessary re-renders.
+
+──────────────────────────────────────────
+WHAT IS EXPLICITLY FORBIDDEN
+──────────────────────────────────────────
+- No Three.js 3D. This is 2D. The depth comes from layering 
+  and glow, not from a Z-axis.
+- No React Flow. react-force-graph-2d only for the network.
+- No Recharts. Nivo only.
+- No placeholder lorem ipsum data. All data from CSVs.
+- No tutorial overlays or onboarding tooltips.
+- No mobile responsive layout. This is a desktop/projector tool.
+- No dark/light mode toggle.
+- No sounds or haptics.
+- No AI chat panel.
+- No company logos from the internet (use text initials only).
+- Do not add any feature not specified in this document.

@@ -1,0 +1,201 @@
+supplier_id,corridor,tier,anchor_id,utilisation_t0,utilisation_t1,delta_u,trade_volume_t0_usd,trade_volume_t1_usd,delta_t,engine_classification,displacement_signal_fired,at_risk_volume_usd,retention_value_usd,recommended_intervention,p_preventable
+SUP_0001,India,T2,Anchor_Samsung,0.5788,0.596,0.0298,122463,162999,0.331,Facility_Ceiling,0,2112,2.64,Proactive limit uplift review,0.125
+SUP_0002,Singapore,T3,Anchor_FedEx,0.4679,0.2941,-0.3715,9966,6566,-0.3411,Market_Contraction,0,1732,2.17,Supplier support + anchor DPO check,0.125
+SUP_0003,Singapore,T2,Anchor_Siemens,0.4509,0.4886,0.0837,111397,121078,0.0869,Healthy,0,4204,5.25,No action required,0.125
+SUP_0004,Vietnam,T2,Anchor_Apple,0.7248,0.48,-0.3378,126329,69797,-0.4475,Market_Contraction,0,30930,38.66,Supplier support + anchor DPO check,0.125
+SUP_0005,India,T1,Anchor_FedEx,0.5901,0.2693,-0.5436,262400,196590,-0.2508,Market_Contraction,0,84172,105.22,Supplier support + anchor DPO check,0.125
+SUP_0006,Singapore,T1,Anchor_Samsung,0.4692,0.2732,-0.4178,307021,214147,-0.3025,Market_Contraction,0,60186,75.23,Supplier support + anchor DPO check,0.125
+SUP_0007,Singapore,T1,Anchor_Siemens,0.3749,0.1749,-0.5335,673225,677062,0.0057,Competitor_Displaced,1,134651,504.94,Competitive rate review + value-add proposal,0.375
+SUP_0008,India,T3,Anchor_Apple,0.4594,0.46,0.0013,32538,44847,0.3783,Facility_Ceiling,0,19,0.02,Proactive limit uplift review,0.125
+SUP_0009,Singapore,T2,Anchor_Samsung,0.482,0.3011,-0.3754,149031,111043,-0.2549,Market_Contraction,0,26966,33.71,Supplier support + anchor DPO check,0.125
+SUP_0010,Singapore,T2,Anchor_Unilever,0.5637,0.3653,-0.352,136185,180649,0.3265,Invoice_Timing_Lag,0,27022,33.78,Limit uplift proposal + invoice timing review,0.125
+SUP_0011,India,T1,Anchor_Siemens,0.583,0.5779,-0.0087,477451,664182,0.3911,Facility_Ceiling,0,2422,3.03,Proactive limit uplift review,0.125
+SUP_0012,India,T3,Anchor_Siemens,0.6914,0.6297,-0.0892,16495,17213,0.0435,Healthy,0,1017,1.27,No action required,0.125
+SUP_0013,India,T3,Anchor_Siemens,0.3861,0.2261,-0.4144,44374,54700,0.2327,Invoice_Timing_Lag,0,7100,8.88,Limit uplift proposal + invoice timing review,0.125
+SUP_0014,Singapore,T1,Anchor_Apple,0.4183,0.4628,0.1063,161206,147762,-0.0834,Healthy,0,7168,8.96,No action required,0.125
+SUP_0015,India,T1,Anchor_Unilever,0.4686,0.4898,0.0453,669980,948959,0.4164,Facility_Ceiling,0,14222,17.78,Proactive limit uplift review,0.125
+SUP_0016,Singapore,T1,Anchor_Apple,0.3792,0.3651,-0.0373,404006,550418,0.3624,Facility_Ceiling,0,5714,7.14,Proactive limit uplift review,0.125
+SUP_0017,Singapore,T2,Anchor_Siemens,0.3535,0.2094,-0.4075,104060,65933,-0.3664,Market_Contraction,0,14990,18.74,Supplier support + anchor DPO check,0.125
+SUP_0018,India,T2,Anchor_Apple,0.5067,0.5225,0.0312,49873,51669,0.036,Healthy,0,788,0.98,No action required,0.125
+SUP_0019,India,T2,Anchor_FedEx,0.44,0.2486,-0.435,115424,109029,-0.0554,Competitor_Displaced,1,22092,82.84,Competitive rate review + value-add proposal,0.375
+SUP_0020,India,T1,Anchor_Samsung,0.6795,0.7648,0.1255,740445,689947,-0.0682,Healthy,0,63143,78.93,No action required,0.125
+SUP_0021,India,T2,Anchor_FedEx,0.4144,0.2567,-0.3805,120598,80717,-0.3307,Market_Contraction,0,19016,23.77,Supplier support + anchor DPO check,0.125
+SUP_0022,India,T1,Anchor_Samsung,0.6003,0.5612,-0.0651,752928,823854,0.0942,Healthy,0,29424,36.78,No action required,0.125
+SUP_0023,Singapore,T1,Anchor_Apple,0.4235,0.4031,-0.0482,272846,350253,0.2837,Facility_Ceiling,0,5570,6.96,Proactive limit uplift review,0.125
+SUP_0024,Singapore,T2,Anchor_Apple,0.6145,0.5957,-0.0306,199776,250139,0.2521,Facility_Ceiling,0,3757,4.7,Proactive limit uplift review,0.125
+SUP_0025,Singapore,T2,Anchor_FedEx,0.4725,0.4944,0.0463,137463,165780,0.206,Facility_Ceiling,0,3007,3.76,Proactive limit uplift review,0.125
+SUP_0026,Singapore,T3,Anchor_Unilever,0.5545,0.2978,-0.4629,43617,28238,-0.3526,Market_Contraction,0,11196,14.0,Supplier support + anchor DPO check,0.125
+SUP_0027,Vietnam,T1,Anchor_Unilever,0.3526,0.3996,0.1333,568040,581900,0.0244,Healthy,0,26699,33.37,No action required,0.125
+SUP_0028,Singapore,T2,Anchor_Apple,0.5601,0.5956,0.0634,51083,56677,0.1095,Healthy,0,1814,2.27,No action required,0.125
+SUP_0029,Vietnam,T2,Anchor_Unilever,0.4717,0.2941,-0.3765,113855,142467,0.2513,Invoice_Timing_Lag,0,20220,25.28,Limit uplift proposal + invoice timing review,0.125
+SUP_0030,India,T1,Anchor_Samsung,0.6503,0.6575,0.011,677694,737874,0.0888,Healthy,0,4848,6.06,No action required,0.125
+SUP_0031,India,T2,Anchor_Samsung,0.5614,0.5606,-0.0015,47368,59878,0.2641,Facility_Ceiling,0,40,0.05,Proactive limit uplift review,0.125
+SUP_0032,India,T1,Anchor_Apple,0.507,0.5049,-0.0041,802423,1160223,0.4459,Facility_Ceiling,0,1668,2.08,Proactive limit uplift review,0.125
+SUP_0033,India,T1,Anchor_Apple,0.7238,0.7544,0.0423,485222,483087,-0.0044,Healthy,0,14856,18.57,No action required,0.125
+SUP_0034,India,T3,Anchor_Apple,0.6359,0.4023,-0.3673,41363,43841,0.0599,Competitor_Displaced,1,9661,36.23,Competitive rate review + value-add proposal,0.375
+SUP_0035,Singapore,T3,Anchor_Samsung,0.4536,0.4562,0.0057,17764,18881,0.0629,Healthy,0,46,0.06,No action required,0.125
+SUP_0036,India,T3,Anchor_FedEx,0.3556,0.1782,-0.4989,33344,31433,-0.0573,Competitor_Displaced,1,5915,22.18,Competitive rate review + value-add proposal,0.375
+SUP_0037,Singapore,T2,Anchor_Siemens,0.5891,0.6138,0.0419,43651,49662,0.1377,Healthy,0,1077,1.35,No action required,0.125
+SUP_0038,Singapore,T1,Anchor_Samsung,0.4691,0.2969,-0.3671,415302,410775,-0.0109,Competitor_Displaced,1,71518,268.19,Competitive rate review + value-add proposal,0.375
+SUP_0039,India,T2,Anchor_FedEx,0.3654,0.357,-0.0229,114747,131730,0.148,Healthy,0,960,1.2,No action required,0.125
+SUP_0040,Singapore,T2,Anchor_Unilever,0.7371,0.4944,-0.3293,144582,108784,-0.2476,Market_Contraction,0,35094,43.87,Supplier support + anchor DPO check,0.125
+SUP_0041,Vietnam,T1,Anchor_Siemens,0.3699,0.1787,-0.5168,728834,404940,-0.4444,Market_Contraction,0,139327,174.16,Supplier support + anchor DPO check,0.125
+SUP_0042,Vietnam,T2,Anchor_FedEx,0.3876,0.3805,-0.0184,187935,203346,0.082,Healthy,0,1340,1.68,No action required,0.125
+SUP_0043,Vietnam,T1,Anchor_Samsung,0.447,0.4175,-0.0659,597227,671581,0.1245,Healthy,0,17593,21.99,No action required,0.125
+SUP_0044,Singapore,T3,Anchor_Siemens,0.6215,0.2814,-0.5472,21233,12965,-0.3894,Market_Contraction,0,7221,9.03,Supplier support + anchor DPO check,0.125
+SUP_0045,Singapore,T1,Anchor_Samsung,0.4162,0.4025,-0.033,990239,1101937,0.1128,Healthy,0,13601,17.0,No action required,0.125
+SUP_0046,Vietnam,T2,Anchor_FedEx,0.6909,0.4204,-0.3915,60534,38802,-0.359,Market_Contraction,0,16374,20.47,Supplier support + anchor DPO check,0.125
+SUP_0047,Singapore,T2,Anchor_Samsung,0.6633,0.739,0.1141,46141,47087,0.0205,Healthy,0,3492,4.37,No action required,0.125
+SUP_0048,Vietnam,T2,Anchor_Siemens,0.4416,0.217,-0.5086,139771,104032,-0.2557,Market_Contraction,0,31392,39.24,Supplier support + anchor DPO check,0.125
+SUP_0049,Vietnam,T2,Anchor_Apple,0.4199,0.3798,-0.0954,174882,193769,0.108,Healthy,0,7005,8.76,No action required,0.125
+SUP_0050,Vietnam,T1,Anchor_Siemens,0.4116,0.4278,0.0394,407175,432745,0.0628,Healthy,0,6603,8.25,No action required,0.125
+SUP_0051,Singapore,T3,Anchor_Samsung,0.4244,0.2439,-0.4253,53042,48697,-0.0819,Competitor_Displaced,1,9574,35.9,Competitive rate review + value-add proposal,0.375
+SUP_0052,Singapore,T3,Anchor_Samsung,0.6023,0.5762,-0.0433,32904,36155,0.0988,Healthy,0,858,1.07,No action required,0.125
+SUP_0053,Vietnam,T3,Anchor_Unilever,0.5483,0.5243,-0.0438,42351,48699,0.1499,Healthy,0,1017,1.27,No action required,0.125
+SUP_0054,Singapore,T3,Anchor_Unilever,0.6725,0.6506,-0.0325,13895,14826,0.067,Healthy,0,304,0.38,No action required,0.125
+SUP_0055,Singapore,T2,Anchor_Samsung,0.7168,0.4944,-0.3102,184490,184564,0.0004,Competitor_Displaced,1,41022,153.83,Competitive rate review + value-add proposal,0.375
+SUP_0056,India,T3,Anchor_Siemens,0.709,0.7502,0.0581,38562,36946,-0.0419,Healthy,0,1588,1.99,No action required,0.125
+SUP_0057,Vietnam,T1,Anchor_Samsung,0.4023,0.3961,-0.0153,152143,168088,0.1048,Healthy,0,936,1.17,No action required,0.125
+SUP_0058,India,T1,Anchor_Siemens,0.6297,0.6065,-0.0369,281261,254428,-0.0954,Healthy,0,6535,8.17,No action required,0.125
+SUP_0059,India,T1,Anchor_Unilever,0.7445,0.6825,-0.0833,652956,741497,0.1356,Healthy,0,40494,50.62,No action required,0.125
+SUP_0060,Singapore,T2,Anchor_Samsung,0.6606,0.3469,-0.4748,56185,38475,-0.3152,Market_Contraction,0,17623,22.03,Supplier support + anchor DPO check,0.125
+SUP_0061,India,T2,Anchor_Siemens,0.5809,0.3824,-0.3417,165448,120181,-0.2736,Market_Contraction,0,32840,41.05,Supplier support + anchor DPO check,0.125
+SUP_0062,Vietnam,T1,Anchor_Unilever,0.4039,0.4364,0.0805,169431,180715,0.0666,Healthy,0,5509,6.89,No action required,0.125
+SUP_0063,Singapore,T3,Anchor_Samsung,0.3603,0.225,-0.3756,24726,16730,-0.3234,Market_Contraction,0,3346,4.18,Supplier support + anchor DPO check,0.125
+SUP_0064,India,T2,Anchor_Apple,0.3739,0.2589,-0.3077,119169,71489,-0.4001,Market_Contraction,0,13710,17.14,Supplier support + anchor DPO check,0.125
+SUP_0065,Vietnam,T1,Anchor_Unilever,0.706,0.4895,-0.3067,575854,744982,0.2937,Invoice_Timing_Lag,0,124690,155.86,Limit uplift proposal + invoice timing review,0.125
+SUP_0066,India,T2,Anchor_Unilever,0.5591,0.3077,-0.4496,168993,126711,-0.2502,Market_Contraction,0,42480,53.1,Supplier support + anchor DPO check,0.125
+SUP_0067,India,T1,Anchor_Siemens,0.7416,0.4592,-0.3808,573009,411879,-0.2812,Market_Contraction,0,161818,202.27,Supplier support + anchor DPO check,0.125
+SUP_0068,India,T3,Anchor_Samsung,0.4622,0.468,0.0126,41727,58351,0.3984,Facility_Ceiling,0,243,0.3,Proactive limit uplift review,0.125
+SUP_0069,Singapore,T1,Anchor_Unilever,0.5145,0.5288,0.0277,217699,226233,0.0392,Healthy,0,3103,3.88,No action required,0.125
+SUP_0070,Singapore,T3,Anchor_Siemens,0.7378,0.4254,-0.4234,24637,14080,-0.4285,Market_Contraction,0,7696,9.62,Supplier support + anchor DPO check,0.125
+SUP_0071,India,T3,Anchor_Unilever,0.6408,0.7122,0.1115,54764,55750,0.018,Healthy,0,3913,4.89,No action required,0.125
+SUP_0072,India,T1,Anchor_Unilever,0.6834,0.7414,0.0849,642920,618425,-0.0381,Healthy,0,37303,46.63,No action required,0.125
+SUP_0073,Vietnam,T1,Anchor_FedEx,0.5121,0.2863,-0.441,242376,166997,-0.311,Market_Contraction,0,54737,68.42,Supplier support + anchor DPO check,0.125
+SUP_0074,Vietnam,T3,Anchor_Siemens,0.6777,0.6194,-0.0861,27953,27145,-0.0289,Healthy,0,1631,2.04,No action required,0.125
+SUP_0075,India,T2,Anchor_Samsung,0.5426,0.3379,-0.3773,74948,57013,-0.2393,Market_Contraction,0,15343,19.18,Supplier support + anchor DPO check,0.125
+SUP_0076,India,T2,Anchor_Samsung,0.475,0.2394,-0.496,140105,81541,-0.418,Market_Contraction,0,33009,41.26,Supplier support + anchor DPO check,0.125
+SUP_0077,India,T3,Anchor_Siemens,0.47,0.3094,-0.3416,16978,21625,0.2737,Invoice_Timing_Lag,0,2726,3.41,Limit uplift proposal + invoice timing review,0.125
+SUP_0078,India,T1,Anchor_Apple,0.6105,0.5846,-0.0425,559361,504208,-0.0986,Healthy,0,14513,18.14,No action required,0.125
+SUP_0079,India,T2,Anchor_Apple,0.3826,0.3956,0.0339,51436,47069,-0.0849,Healthy,0,667,0.83,No action required,0.125
+SUP_0080,India,T1,Anchor_FedEx,0.6501,0.3673,-0.435,187405,216697,0.1563,Invoice_Timing_Lag,0,52997,66.25,Limit uplift proposal + invoice timing review,0.125
+SUP_0081,Vietnam,T3,Anchor_FedEx,0.4524,0.4982,0.1013,13868,13278,-0.0425,Healthy,0,636,0.8,No action required,0.125
+SUP_0082,Singapore,T2,Anchor_Unilever,0.4268,0.2748,-0.3562,73493,72611,-0.012,Competitor_Displaced,1,11173,41.9,Competitive rate review + value-add proposal,0.375
+SUP_0083,Singapore,T2,Anchor_Apple,0.4471,0.4561,0.0202,63278,56995,-0.0993,Healthy,0,571,0.71,No action required,0.125
+SUP_0084,Singapore,T1,Anchor_FedEx,0.4907,0.5581,0.1373,816128,902964,0.1064,Healthy,0,54985,68.73,No action required,0.125
+SUP_0085,India,T2,Anchor_FedEx,0.4394,0.4143,-0.0571,94586,103373,0.0929,Healthy,0,2373,2.97,No action required,0.125
+SUP_0086,Singapore,T2,Anchor_Apple,0.5131,0.5805,0.1314,118446,111422,-0.0593,Healthy,0,7986,9.98,No action required,0.125
+SUP_0087,India,T2,Anchor_Apple,0.4916,0.2856,-0.4191,123508,123187,-0.0026,Competitor_Displaced,1,25446,95.42,Competitive rate review + value-add proposal,0.375
+SUP_0088,India,T2,Anchor_FedEx,0.4062,0.375,-0.0769,50965,55063,0.0804,Healthy,0,1592,1.99,No action required,0.125
+SUP_0089,Singapore,T3,Anchor_Unilever,0.5293,0.3266,-0.3829,40127,41860,0.0432,Competitor_Displaced,1,8132,30.5,Competitive rate review + value-add proposal,0.375
+SUP_0090,India,T2,Anchor_Unilever,0.6535,0.4092,-0.3739,70347,67216,-0.0445,Competitor_Displaced,1,17189,64.46,Competitive rate review + value-add proposal,0.375
+SUP_0091,Singapore,T1,Anchor_Samsung,0.3651,0.3578,-0.02,468017,586659,0.2535,Facility_Ceiling,0,3417,4.27,Proactive limit uplift review,0.125
+SUP_0092,Singapore,T2,Anchor_Samsung,0.6256,0.4068,-0.3497,93699,86446,-0.0774,Competitor_Displaced,1,20499,76.87,Competitive rate review + value-add proposal,0.375
+SUP_0093,India,T3,Anchor_FedEx,0.6295,0.6231,-0.0101,24227,27417,0.1317,Healthy,0,154,0.19,No action required,0.125
+SUP_0094,Singapore,T2,Anchor_Apple,0.4759,0.2511,-0.4724,49096,63717,0.2978,Invoice_Timing_Lag,0,11038,13.8,Limit uplift proposal + invoice timing review,0.125
+SUP_0095,Singapore,T3,Anchor_Siemens,0.4928,0.5515,0.1192,23797,25439,0.069,Healthy,0,1398,1.75,No action required,0.125
+SUP_0096,India,T2,Anchor_Siemens,0.6943,0.6935,-0.0012,171527,174374,0.0166,Healthy,0,143,0.18,No action required,0.125
+SUP_0097,India,T2,Anchor_Unilever,0.6311,0.6308,-0.0005,38810,44178,0.1383,Healthy,0,12,0.01,No action required,0.125
+SUP_0098,Singapore,T2,Anchor_Samsung,0.687,0.4305,-0.3734,94035,52519,-0.4415,Market_Contraction,0,24122,30.15,Supplier support + anchor DPO check,0.125
+SUP_0099,India,T1,Anchor_Unilever,0.351,0.3173,-0.0961,581430,562941,-0.0318,Healthy,0,19612,24.52,No action required,0.125
+SUP_0100,Singapore,T1,Anchor_Unilever,0.6022,0.2851,-0.5265,284504,175482,-0.3832,Market_Contraction,0,90204,112.75,Supplier support + anchor DPO check,0.125
+SUP_0101,Singapore,T1,Anchor_Apple,0.7197,0.7511,0.0436,734353,788622,0.0739,Healthy,0,23043,28.8,No action required,0.125
+SUP_0102,India,T2,Anchor_Samsung,0.6591,0.6466,-0.0189,90755,120032,0.3226,Facility_Ceiling,0,1131,1.41,Proactive limit uplift review,0.125
+SUP_0103,India,T2,Anchor_Apple,0.6709,0.3242,-0.5167,78241,55841,-0.2863,Market_Contraction,0,27123,33.9,Supplier support + anchor DPO check,0.125
+SUP_0104,India,T2,Anchor_Samsung,0.4989,0.495,-0.0078,51740,65353,0.2631,Facility_Ceiling,0,201,0.25,Proactive limit uplift review,0.125
+SUP_0105,India,T3,Anchor_Siemens,0.6105,0.3847,-0.3698,15545,14281,-0.0813,Competitor_Displaced,1,3510,13.16,Competitive rate review + value-add proposal,0.375
+SUP_0106,Vietnam,T1,Anchor_FedEx,0.4571,0.2639,-0.4227,671302,675196,0.0058,Competitor_Displaced,1,129706,486.4,Competitive rate review + value-add proposal,0.375
+SUP_0107,India,T2,Anchor_Siemens,0.3553,0.3592,0.0109,148516,163189,0.0988,Healthy,0,575,0.72,No action required,0.125
+SUP_0108,Singapore,T3,Anchor_Unilever,0.5026,0.5775,0.149,38946,38261,-0.0176,Healthy,0,2917,3.65,No action required,0.125
+SUP_0109,India,T1,Anchor_Samsung,0.6576,0.6753,0.0269,506769,621450,0.2263,Facility_Ceiling,0,8964,11.21,Proactive limit uplift review,0.125
+SUP_0110,Singapore,T1,Anchor_Siemens,0.5647,0.5746,0.0176,745813,710685,-0.0471,Healthy,0,7412,9.27,No action required,0.125
+SUP_0111,Singapore,T1,Anchor_Samsung,0.7,0.8031,0.1473,343410,332455,-0.0319,Healthy,0,35409,44.26,No action required,0.125
+SUP_0112,Singapore,T1,Anchor_Apple,0.6036,0.5913,-0.0203,257507,258150,0.0025,Healthy,0,3155,3.94,No action required,0.125
+SUP_0113,Singapore,T3,Anchor_Samsung,0.3622,0.3841,0.0604,42130,40125,-0.0476,Healthy,0,922,1.15,No action required,0.125
+SUP_0114,Vietnam,T3,Anchor_Unilever,0.7242,0.4736,-0.3461,40859,26591,-0.3492,Market_Contraction,0,10241,12.8,Supplier support + anchor DPO check,0.125
+SUP_0115,India,T2,Anchor_Siemens,0.3639,0.361,-0.0079,91973,97639,0.0616,Healthy,0,264,0.33,No action required,0.125
+SUP_0116,India,T3,Anchor_FedEx,0.6905,0.6904,-0.0002,43526,44048,0.012,Healthy,0,6,0.01,No action required,0.125
+SUP_0117,Singapore,T3,Anchor_Apple,0.4149,0.2571,-0.3803,38559,38999,0.0114,Competitor_Displaced,1,6084,22.82,Competitive rate review + value-add proposal,0.375
+SUP_0118,Singapore,T1,Anchor_Siemens,0.7268,0.8333,0.1465,425327,464372,0.0918,Healthy,0,45287,56.61,No action required,0.125
+SUP_0119,Singapore,T3,Anchor_Samsung,0.3557,0.3332,-0.0632,39139,36791,-0.06,Healthy,0,880,1.1,No action required,0.125
+SUP_0120,Singapore,T2,Anchor_Siemens,0.5163,0.311,-0.3976,184031,118148,-0.358,Market_Contraction,0,37778,47.22,Supplier support + anchor DPO check,0.125
+SUP_0121,India,T3,Anchor_Unilever,0.6188,0.5847,-0.0551,32687,34834,0.0657,Healthy,0,1114,1.39,No action required,0.125
+SUP_0122,India,T3,Anchor_FedEx,0.5821,0.3345,-0.4254,26086,16630,-0.3625,Market_Contraction,0,6460,8.07,Supplier support + anchor DPO check,0.125
+SUP_0123,India,T2,Anchor_Apple,0.6372,0.6108,-0.0414,190742,269098,0.4108,Facility_Ceiling,0,5032,6.29,Proactive limit uplift review,0.125
+SUP_0124,Singapore,T1,Anchor_Samsung,0.462,0.2858,-0.3814,404710,503095,0.2431,Invoice_Timing_Lag,0,71313,89.14,Limit uplift proposal + invoice timing review,0.125
+SUP_0125,Vietnam,T1,Anchor_FedEx,0.6682,0.4216,-0.369,355333,275881,-0.2236,Market_Contraction,0,87613,109.52,Supplier support + anchor DPO check,0.125
+SUP_0126,India,T2,Anchor_Unilever,0.606,0.3738,-0.3832,119065,73916,-0.3792,Market_Contraction,0,27649,34.56,Supplier support + anchor DPO check,0.125
+SUP_0127,India,T3,Anchor_Siemens,0.4255,0.4069,-0.0437,17909,24277,0.3556,Facility_Ceiling,0,333,0.42,Proactive limit uplift review,0.125
+SUP_0128,India,T3,Anchor_Samsung,0.4409,0.2522,-0.428,38345,41390,0.0794,Competitor_Displaced,1,7236,27.13,Competitive rate review + value-add proposal,0.375
+SUP_0129,Singapore,T1,Anchor_Unilever,0.6607,0.7436,0.1254,643129,726029,0.1289,Healthy,0,53284,66.61,No action required,0.125
+SUP_0130,Singapore,T2,Anchor_Siemens,0.6145,0.5925,-0.0358,40390,55641,0.3776,Facility_Ceiling,0,889,1.11,Proactive limit uplift review,0.125
+SUP_0131,Singapore,T2,Anchor_Samsung,0.5218,0.2912,-0.4419,104434,107588,0.0302,Competitor_Displaced,1,24081,90.3,Competitive rate review + value-add proposal,0.375
+SUP_0132,India,T1,Anchor_Apple,0.6286,0.6036,-0.0398,443868,587415,0.3234,Facility_Ceiling,0,11105,13.88,Proactive limit uplift review,0.125
+SUP_0133,Singapore,T1,Anchor_Samsung,0.5261,0.5975,0.1357,919489,888962,-0.0332,Healthy,0,65644,82.06,No action required,0.125
+SUP_0134,Singapore,T2,Anchor_FedEx,0.3624,0.4018,0.1087,63496,66010,0.0396,Healthy,0,2501,3.13,No action required,0.125
+SUP_0135,Singapore,T3,Anchor_FedEx,0.5508,0.3493,-0.3658,34035,39303,0.1548,Invoice_Timing_Lag,0,6857,8.57,Limit uplift proposal + invoice timing review,0.125
+SUP_0136,Singapore,T2,Anchor_Samsung,0.7351,0.7035,-0.043,115266,112880,-0.0207,Healthy,0,3643,4.55,No action required,0.125
+SUP_0137,Vietnam,T2,Anchor_Siemens,0.3504,0.4015,0.1458,223247,233271,0.0449,Healthy,0,11405,14.26,No action required,0.125
+SUP_0138,India,T2,Anchor_Samsung,0.4599,0.2503,-0.4558,120276,93082,-0.2261,Market_Contraction,0,25213,31.52,Supplier support + anchor DPO check,0.125
+SUP_0139,India,T2,Anchor_Siemens,0.5875,0.3335,-0.4324,123042,149213,0.2127,Invoice_Timing_Lag,0,31257,39.07,Limit uplift proposal + invoice timing review,0.125
+SUP_0140,Singapore,T3,Anchor_Unilever,0.41,0.2801,-0.3168,31375,30044,-0.0424,Competitor_Displaced,1,4075,15.28,Competitive rate review + value-add proposal,0.375
+SUP_0141,India,T3,Anchor_Unilever,0.5245,0.5043,-0.0385,21926,24485,0.1167,Healthy,0,443,0.55,No action required,0.125
+SUP_0142,India,T1,Anchor_Siemens,0.4481,0.4886,0.0903,680050,656656,-0.0344,Healthy,0,27517,34.4,No action required,0.125
+SUP_0143,Singapore,T2,Anchor_FedEx,0.4869,0.4625,-0.0501,77193,87753,0.1368,Healthy,0,1883,2.35,No action required,0.125
+SUP_0144,Singapore,T2,Anchor_Samsung,0.6423,0.362,-0.4364,118019,152067,0.2885,Invoice_Timing_Lag,0,33081,41.35,Limit uplift proposal + invoice timing review,0.125
+SUP_0145,Singapore,T1,Anchor_Unilever,0.4891,0.4779,-0.0228,378599,379546,0.0025,Healthy,0,4222,5.28,No action required,0.125
+SUP_0146,India,T1,Anchor_Unilever,0.3705,0.1938,-0.4768,442208,511104,0.1558,Invoice_Timing_Lag,0,78118,97.65,Limit uplift proposal + invoice timing review,0.125
+SUP_0147,India,T2,Anchor_Apple,0.5536,0.5077,-0.083,156889,145436,-0.073,Healthy,0,7209,9.01,No action required,0.125
+SUP_0148,Singapore,T2,Anchor_FedEx,0.6157,0.4061,-0.3404,114405,83836,-0.2672,Market_Contraction,0,23977,29.97,Supplier support + anchor DPO check,0.125
+SUP_0149,Singapore,T1,Anchor_Samsung,0.4428,0.4652,0.0507,526388,549970,0.0448,Healthy,0,11817,14.77,No action required,0.125
+SUP_0150,India,T1,Anchor_FedEx,0.6564,0.6951,0.0589,545955,511614,-0.0629,Healthy,0,21108,26.39,No action required,0.125
+SUP_0151,India,T3,Anchor_Apple,0.4859,0.3023,-0.3778,43759,47098,0.0763,Competitor_Displaced,1,8033,30.12,Competitive rate review + value-add proposal,0.375
+SUP_0152,Vietnam,T1,Anchor_Unilever,0.5114,0.2529,-0.5054,640264,681689,0.0647,Competitor_Displaced,1,165484,620.57,Competitive rate review + value-add proposal,0.375
+SUP_0153,India,T1,Anchor_Samsung,0.7306,0.7578,0.0372,619772,800001,0.2908,Facility_Ceiling,0,16844,21.05,Proactive limit uplift review,0.125
+SUP_0154,Singapore,T2,Anchor_FedEx,0.3517,0.2341,-0.3343,108315,70209,-0.3518,Market_Contraction,0,12735,15.92,Supplier support + anchor DPO check,0.125
+SUP_0155,Singapore,T3,Anchor_Apple,0.6628,0.5996,-0.0953,24495,22825,-0.0682,Healthy,0,1547,1.93,No action required,0.125
+SUP_0156,India,T1,Anchor_Samsung,0.4987,0.5023,0.0072,261897,285363,0.0896,Healthy,0,940,1.18,No action required,0.125
+SUP_0157,Singapore,T2,Anchor_Apple,0.4376,0.241,-0.4492,62535,74092,0.1848,Invoice_Timing_Lag,0,12293,15.37,Limit uplift proposal + invoice timing review,0.125
+SUP_0158,India,T3,Anchor_Siemens,0.53,0.5344,0.0083,39152,44218,0.1294,Healthy,0,172,0.21,No action required,0.125
+SUP_0159,Vietnam,T1,Anchor_FedEx,0.4754,0.5311,0.1171,281414,280261,-0.0041,Healthy,0,15666,19.58,No action required,0.125
+SUP_0160,India,T2,Anchor_Apple,0.5893,0.5819,-0.0126,76716,75051,-0.0217,Healthy,0,570,0.71,No action required,0.125
+SUP_0161,Singapore,T2,Anchor_Unilever,0.5948,0.2929,-0.5076,138771,98958,-0.2869,Market_Contraction,0,41898,52.37,Supplier support + anchor DPO check,0.125
+SUP_0162,India,T2,Anchor_Apple,0.5294,0.3353,-0.3667,224722,138721,-0.3827,Market_Contraction,0,43625,54.53,Supplier support + anchor DPO check,0.125
+SUP_0163,India,T2,Anchor_Samsung,0.6018,0.5496,-0.0867,93933,104444,0.1119,Healthy,0,4901,6.13,No action required,0.125
+SUP_0164,India,T2,Anchor_Samsung,0.5167,0.2995,-0.4203,95865,113111,0.1799,Invoice_Timing_Lag,0,20819,26.02,Limit uplift proposal + invoice timing review,0.125
+SUP_0165,Vietnam,T1,Anchor_Unilever,0.5822,0.5368,-0.078,642021,687476,0.0708,Healthy,0,29155,36.44,No action required,0.125
+SUP_0166,Singapore,T3,Anchor_Apple,0.7268,0.4657,-0.3592,14177,17225,0.215,Invoice_Timing_Lag,0,3701,4.63,Limit uplift proposal + invoice timing review,0.125
+SUP_0167,Vietnam,T2,Anchor_Unilever,0.6237,0.3733,-0.4014,157224,109632,-0.3027,Market_Contraction,0,39362,49.2,Supplier support + anchor DPO check,0.125
+SUP_0168,Vietnam,T1,Anchor_Apple,0.7352,0.4794,-0.348,976723,911771,-0.0665,Competitor_Displaced,1,249894,937.1,Competitive rate review + value-add proposal,0.375
+SUP_0169,Singapore,T1,Anchor_FedEx,0.3968,0.2679,-0.3248,736153,683003,-0.0722,Competitor_Displaced,1,94876,355.78,Competitive rate review + value-add proposal,0.375
+SUP_0170,Singapore,T2,Anchor_Siemens,0.517,0.5369,0.0385,197378,212438,0.0763,Healthy,0,3929,4.91,No action required,0.125
+SUP_0171,Singapore,T2,Anchor_Unilever,0.559,0.5404,-0.0332,69522,67395,-0.0306,Healthy,0,1290,1.61,No action required,0.125
+SUP_0172,Singapore,T1,Anchor_Unilever,0.5744,0.5589,-0.0269,632926,833880,0.3175,Facility_Ceiling,0,9780,12.22,Proactive limit uplift review,0.125
+SUP_0173,Singapore,T2,Anchor_Siemens,0.7226,0.3961,-0.4519,89020,85485,-0.0397,Competitor_Displaced,1,29069,109.01,Competitive rate review + value-add proposal,0.375
+SUP_0174,India,T1,Anchor_Siemens,0.3734,0.3559,-0.0469,440534,490932,0.1144,Healthy,0,7715,9.64,No action required,0.125
+SUP_0175,Singapore,T2,Anchor_Unilever,0.5129,0.5309,0.0351,112509,107525,-0.0443,Healthy,0,2025,2.53,No action required,0.125
+SUP_0176,Singapore,T1,Anchor_FedEx,0.5056,0.3323,-0.3428,877659,893983,0.0186,Competitor_Displaced,1,152116,570.44,Competitive rate review + value-add proposal,0.375
+SUP_0177,India,T2,Anchor_Unilever,0.4499,0.3049,-0.3222,103448,136437,0.3189,Invoice_Timing_Lag,0,14996,18.75,Limit uplift proposal + invoice timing review,0.125
+SUP_0178,Singapore,T2,Anchor_Apple,0.5163,0.539,0.044,68647,87415,0.2734,Facility_Ceiling,0,1559,1.95,Proactive limit uplift review,0.125
+SUP_0179,India,T3,Anchor_Siemens,0.3947,0.2729,-0.3087,32520,32458,-0.0019,Competitor_Displaced,1,3962,14.86,Competitive rate review + value-add proposal,0.375
+SUP_0180,Singapore,T1,Anchor_Apple,0.4864,0.3264,-0.3289,724590,747560,0.0317,Competitor_Displaced,1,115918,434.69,Competitive rate review + value-add proposal,0.375
+SUP_0181,Singapore,T2,Anchor_Apple,0.4841,0.4551,-0.0599,77276,76109,-0.0151,Healthy,0,2241,2.8,No action required,0.125
+SUP_0182,India,T1,Anchor_Unilever,0.4196,0.4156,-0.0096,203943,203780,-0.0008,Healthy,0,822,1.03,No action required,0.125
+SUP_0183,India,T3,Anchor_Apple,0.6335,0.7183,0.1339,45160,45196,0.0008,Healthy,0,3831,4.79,No action required,0.125
+SUP_0184,Vietnam,T3,Anchor_Samsung,0.451,0.4474,-0.008,33039,32517,-0.0158,Healthy,0,119,0.15,No action required,0.125
+SUP_0185,India,T1,Anchor_FedEx,0.6632,0.3142,-0.5262,261466,243555,-0.0685,Competitor_Displaced,1,91245,342.17,Competitive rate review + value-add proposal,0.375
+SUP_0186,India,T2,Anchor_Apple,0.5876,0.662,0.1266,156910,161084,0.0266,Healthy,0,11673,14.59,No action required,0.125
+SUP_0187,Singapore,T3,Anchor_Samsung,0.5349,0.5136,-0.0398,27412,33397,0.2183,Facility_Ceiling,0,584,0.73,Proactive limit uplift review,0.125
+SUP_0188,Singapore,T2,Anchor_Samsung,0.7313,0.5039,-0.311,101994,131277,0.2871,Invoice_Timing_Lag,0,23197,29.0,Limit uplift proposal + invoice timing review,0.125
+SUP_0189,India,T2,Anchor_Siemens,0.5759,0.6161,0.0698,126018,132533,0.0517,Healthy,0,5066,6.33,No action required,0.125
+SUP_0190,India,T1,Anchor_Unilever,0.485,0.4761,-0.0183,649957,834480,0.2839,Facility_Ceiling,0,5769,7.21,Proactive limit uplift review,0.125
+SUP_0191,Vietnam,T1,Anchor_Apple,0.4253,0.2279,-0.4641,241217,168490,-0.3015,Market_Contraction,0,47612,59.52,Supplier support + anchor DPO check,0.125
+SUP_0192,Singapore,T3,Anchor_Apple,0.3647,0.2352,-0.3552,41377,51374,0.2416,Invoice_Timing_Lag,0,5360,6.7,Limit uplift proposal + invoice timing review,0.125
+SUP_0193,Singapore,T3,Anchor_Apple,0.6744,0.7617,0.1294,32861,35161,0.07,Healthy,0,2868,3.58,No action required,0.125
+SUP_0194,India,T2,Anchor_Siemens,0.6155,0.664,0.0788,88847,94169,0.0599,Healthy,0,4309,5.39,No action required,0.125
+SUP_0195,Singapore,T2,Anchor_Samsung,0.7099,0.7594,0.0697,95528,97266,0.0182,Healthy,0,4727,5.91,No action required,0.125
+SUP_0196,Vietnam,T2,Anchor_Siemens,0.4104,0.4472,0.0897,178498,172501,-0.0336,Healthy,0,6571,8.21,No action required,0.125
+SUP_0197,Vietnam,T2,Anchor_FedEx,0.6723,0.6949,0.0336,113642,163360,0.4375,Facility_Ceiling,0,2567,3.21,Proactive limit uplift review,0.125
+SUP_0198,Singapore,T3,Anchor_Unilever,0.3851,0.4369,0.1344,51463,47968,-0.0679,Healthy,0,2664,3.33,No action required,0.125
+SUP_0199,India,T3,Anchor_Apple,0.36,0.1806,-0.4984,20024,21718,0.0846,Competitor_Displaced,1,3593,13.47,Competitive rate review + value-add proposal,0.375
+SUP_0200,India,T3,Anchor_Apple,0.378,0.3679,-0.0267,47570,52555,0.1048,Healthy,0,480,0.6,No action required,0.125
