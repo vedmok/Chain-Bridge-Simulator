@@ -37,24 +37,26 @@ export function triggerStressCascade(
     },
     onComplete: () => {
       animState[supplierId] = 1;
-    }
+    },
   });
 
   setStore(s => {
     const n = s.nodes.find(x => x.id === supplierId);
-    if (n) (n as any).state = 'critical';
+    if (n && n.type !== 'anchor' && n.type !== 'competitor') {
+      (n as SupplierNode).state = 'critical';
+    }
+
+    s.addSignal({
+      id: `sig-${Date.now()}`,
+      supplier_id: supplierId,
+      type: 'cross_anchor_stress',
+      timestamp: Date.now(),
+      description: `Cross-anchor stress detected on ${supplierId}`,
+      corridor: sup.corridor,
+    });
   });
 
-  store.signals.unshift({
-    id: `sig-${Date.now()}`,
-    supplier_id: supplierId,
-    type: 'cross_anchor_stress',
-    timestamp: Date.now(),
-    description: `Cross-anchor stress detected on ${supplierId}`,
-    corridor: sup.corridor,
-  });
-
-  const connectedLinks = store.links.filter(l => {
+  const connectedLinks = getStore().links.filter(l => {
     const src = typeof l.source === 'object' ? (l.source as any).id : l.source;
     const tgt = typeof l.target === 'object' ? (l.target as any).id : l.target;
     return src === supplierId || tgt === supplierId;
@@ -85,12 +87,13 @@ export function triggerAnchorDpoScenario(
   if (!anchor) return;
 
   const newDpo = (anchor.dpo_days || 50) + 20;
+
   setStore(s => {
     const a = s.nodes.find(n => n.id === anchorId) as AnchorNode | undefined;
     if (a) a.dpo_days = newDpo;
   });
 
-  const connectedSuppliers = store.nodes.filter(n => {
+  const connectedSuppliers = getStore().nodes.filter(n => {
     if (n.type === 'anchor' || n.type === 'competitor') return false;
     const sup = n as SupplierNode;
     return sup.anchors.some(a => a.anchor_id === anchorId);
@@ -104,6 +107,7 @@ export function triggerAnchorDpoScenario(
           const n = node as SupplierNode;
           if (n.state === 'healthy') n.state = 'at-risk';
         }
+
         s.links.forEach(l => {
           const src = typeof l.source === 'object' ? (l.source as any).id : l.source;
           const tgt = typeof l.target === 'object' ? (l.target as any).id : l.target;
@@ -114,6 +118,7 @@ export function triggerAnchorDpoScenario(
             l.particle_color = '#FFB800';
           }
         });
+
         s.addSignal({
           id: `sig-dpo-${sup.id}-${Date.now()}`,
           supplier_id: sup.id,
@@ -132,8 +137,12 @@ export function triggerCompetitorRateWar(
   setStore: (fn: (s: SimStore) => void) => void
 ) {
   const store = getStore();
-  const t2Suppliers = store.nodes.filter(n =>
-    n.type !== 'anchor' && n.type !== 'competitor' && (n as SupplierNode).tier === 'T2' && (n as SupplierNode).state !== 'displaced'
+  const t2Suppliers = store.nodes.filter(
+    n =>
+      n.type !== 'anchor' &&
+      n.type !== 'competitor' &&
+      (n as SupplierNode).tier === 'T2' &&
+      (n as SupplierNode).state !== 'displaced'
   ) as SupplierNode[];
 
   const targets = t2Suppliers.sort(() => Math.random() - 0.5).slice(0, 6);
@@ -142,13 +151,17 @@ export function triggerCompetitorRateWar(
     setTimeout(() => {
       setStore(s => {
         const node = s.nodes.find(x => x.id === sup.id);
-        if (node) (node as any).state = 'displaced';
-        const key = `${sup.id}__COMPETITOR`;
-        if (!s.links.find(l => {
+        if (node && node.type !== 'anchor' && node.type !== 'competitor') {
+          (node as SupplierNode).state = 'displaced';
+        }
+
+        const alreadyExists = s.links.find(l => {
           const src = typeof l.source === 'object' ? (l.source as any).id : l.source;
           const tgt = typeof l.target === 'object' ? (l.target as any).id : l.target;
           return src === sup.id && tgt === 'COMPETITOR';
-        })) {
+        });
+
+        if (!alreadyExists) {
           s.links.push({
             source: sup.id,
             target: 'COMPETITOR',
@@ -160,12 +173,15 @@ export function triggerCompetitorRateWar(
             curvature: 0.15,
           });
         }
+
         s.addSignal({
           id: `sig-disp-${sup.id}-${Date.now()}`,
           supplier_id: sup.id,
           type: 'displacement',
           timestamp: Date.now(),
-          description: `${sup.id} displaced to competitor — utilisation drop ${Math.abs(sup.delta_u * 100).toFixed(1)}%`,
+          description: `${sup.id} displaced to competitor — utilisation drop ${Math.abs(
+            sup.delta_u * 100
+          ).toFixed(1)}%`,
           corridor: sup.corridor,
         });
       });
@@ -178,15 +194,18 @@ export function triggerOnboardingBacklog(
   setStore: (fn: (s: SimStore) => void) => void
 ) {
   const store = getStore();
-  const t3Suppliers = store.nodes.filter(n =>
-    n.type !== 'anchor' && n.type !== 'competitor' && (n as SupplierNode).tier === 'T3'
+  const t3Suppliers = store.nodes.filter(
+    n => n.type !== 'anchor' && n.type !== 'competitor' && (n as SupplierNode).tier === 'T3'
   ) as SupplierNode[];
 
   t3Suppliers.forEach((sup, i) => {
     setTimeout(() => {
       setStore(s => {
         const node = s.nodes.find(x => x.id === sup.id);
-        if (node) (node as any).state = 'dormant';
+        if (node && node.type !== 'anchor' && node.type !== 'competitor') {
+          (node as SupplierNode).state = 'dormant';
+        }
+
         s.addSignal({
           id: `sig-ob-${sup.id}-${Date.now()}`,
           supplier_id: sup.id,
@@ -201,8 +220,10 @@ export function triggerOnboardingBacklog(
 
   setTimeout(() => {
     const store2 = getStore();
-    const values = store2.programmeHealth.map((g, i) => i === 1 ? Math.max(10, g.value - 20) : g.value);
-    setStore(s => { s.updateProgrammeHealth(values); });
+    const values = store2.programmeHealth.map((g, i) => (i === 1 ? Math.max(10, g.value - 20) : g.value));
+    setStore(s => {
+      s.updateProgrammeHealth(values);
+    });
   }, 2000);
 }
 
@@ -211,12 +232,17 @@ export function triggerCrossAnchorContagion(
   setStore: (fn: (s: SimStore) => void) => void
 ) {
   const store = getStore();
-  const systemicNodes = store.nodes.filter(n =>
-    n.type !== 'anchor' && n.type !== 'competitor' && (n as SupplierNode).systemic_node_flag
+  const systemicNodes = store.nodes.filter(
+    n =>
+      n.type !== 'anchor' &&
+      n.type !== 'competitor' &&
+      (n as SupplierNode).systemic_node_flag
   ) as SupplierNode[];
 
   if (systemicNodes.length === 0) {
-    const allSuppliers = store.nodes.filter(n => n.type !== 'anchor' && n.type !== 'competitor') as SupplierNode[];
+    const allSuppliers = store.nodes.filter(
+      n => n.type !== 'anchor' && n.type !== 'competitor'
+    ) as SupplierNode[];
     const target = allSuppliers.find(n => n.num_anchors >= 4) || allSuppliers[0];
     if (target) systemicNodes.push(target);
   }
@@ -226,11 +252,11 @@ export function triggerCrossAnchorContagion(
 
   setStore(s => {
     s.setAlertBanner('SYSTEMIC NODE STRESS DETECTED — Cross-anchor exposure active');
-  });
-
-  setStore(s => {
     const node = s.nodes.find(x => x.id === triggerNode.id);
-    if (node) (node as any).state = 'critical';
+    if (node && node.type !== 'anchor' && node.type !== 'competitor') {
+      (node as SupplierNode).state = 'critical';
+    }
+
     s.addSignal({
       id: `sig-cross-${Date.now()}`,
       supplier_id: triggerNode.id,
@@ -248,19 +274,21 @@ export function triggerCrossAnchorContagion(
       setStore(s => {
         const anchor = s.nodes.find(n => n.id === aid) as AnchorNode | undefined;
         if (anchor) anchor.state = 'at-risk';
+
         s.links.forEach(l => {
           const src = typeof l.source === 'object' ? (l.source as any).id : l.source;
           const tgt = typeof l.target === 'object' ? (l.target as any).id : l.target;
           if ((src === triggerNode.id && tgt === aid) || (src === aid && tgt === triggerNode.id)) {
             l.state = 'critical';
             l.particles = 0;
+            l.particle_color = '#FF4444';
           }
         });
       });
     }, 500 + i * 200);
   });
 
-  const secondDegree = store.nodes.filter(n => {
+  const secondDegree = getStore().nodes.filter(n => {
     if (n.type === 'anchor' || n.type === 'competitor') return false;
     if (n.id === triggerNode.id) return false;
     const sup = n as SupplierNode;
@@ -271,8 +299,9 @@ export function triggerCrossAnchorContagion(
     setTimeout(() => {
       setStore(s => {
         const node = s.nodes.find(x => x.id === sup.id);
-        if (node && (node as SupplierNode).state === 'healthy') {
-          (node as any).state = 'at-risk';
+        if (node && node.type !== 'anchor' && node.type !== 'competitor') {
+          const supplier = node as SupplierNode;
+          if (supplier.state === 'healthy') supplier.state = 'at-risk';
         }
       });
     }, 1200 + i * 50);
@@ -288,8 +317,7 @@ export function triggerChainBridgeActive(
     s.simState = 'recovering';
   });
 
-  const store = getStore();
-  const dormantUnaware = store.nodes.filter(n => {
+  const dormantUnaware = getStore().nodes.filter(n => {
     if (n.type === 'anchor' || n.type === 'competitor') return false;
     const sup = n as SupplierNode;
     return sup.state === 'dormant' || sup.supplier_state === 'Unaware';
@@ -299,7 +327,10 @@ export function triggerChainBridgeActive(
     setTimeout(() => {
       setStore(s => {
         const node = s.nodes.find(x => x.id === sup.id);
-        if (node) (node as any).state = 'at-risk';
+        if (node && node.type !== 'anchor' && node.type !== 'competitor') {
+          (node as SupplierNode).state = 'at-risk';
+        }
+
         s.addSignal({
           id: `sig-auto-${sup.id}-${Date.now()}`,
           supplier_id: sup.id,
@@ -312,9 +343,10 @@ export function triggerChainBridgeActive(
     }, 1000 + i * 80);
   });
 
-  const atRiskSuppliers = store.nodes.filter(n => {
+  const atRiskSuppliers = getStore().nodes.filter(n => {
     if (n.type === 'anchor' || n.type === 'competitor') return false;
-    return (n as SupplierNode).state === 'at-risk' || (n as SupplierNode).state === 'displaced';
+    const sup = n as SupplierNode;
+    return sup.state === 'at-risk' || sup.state === 'displaced';
   }) as SupplierNode[];
 
   atRiskSuppliers.slice(0, 6).forEach((sup, i) => {
@@ -324,9 +356,10 @@ export function triggerChainBridgeActive(
           id: `q-cb-${sup.id}`,
           supplier_id: sup.id,
           tier: sup.tier,
-          action_type: sup.state === 'displaced'
-            ? 'Competitive rate review + value-add proposal'
-            : 'Personalised gap calculator + limit review',
+          action_type:
+            sup.state === 'displaced'
+              ? 'Competitive rate review + value-add proposal'
+              : 'Personalised gap calculator + limit review',
           urgency: sup.state === 'displaced' ? 'Critical' : 'High',
           autonomy_tier: 'Recommend and Choose',
           signal_time: Date.now(),
@@ -336,8 +369,11 @@ export function triggerChainBridgeActive(
   });
 
   setTimeout(() => {
-    const store2 = getStore();
-    const atRiskLinks = store2.links.filter(l => l.state === 'at-risk' || l.state === 'displaced');
+    const freshStore = getStore();
+    const atRiskLinks = freshStore.links.filter(
+      l => l.state === 'at-risk' || l.state === 'displaced'
+    );
+
     atRiskLinks.forEach((link, i) => {
       setTimeout(() => {
         setStore(s => {
@@ -352,7 +388,7 @@ export function triggerChainBridgeActive(
       }, i * 150);
     });
 
-    const atRiskNodes = store2.nodes.filter(n => {
+    const atRiskNodes = freshStore.nodes.filter(n => {
       if (n.type === 'anchor' || n.type === 'competitor') return false;
       return (n as SupplierNode).state === 'at-risk';
     });
@@ -361,11 +397,15 @@ export function triggerChainBridgeActive(
       setTimeout(() => {
         setStore(s => {
           const n = s.nodes.find(x => x.id === node.id);
-          if (n && (n as SupplierNode).state === 'at-risk') {
-            (n as any).state = 'healthy';
+          if (n && n.type !== 'anchor' && n.type !== 'competitor') {
+            const supplier = n as SupplierNode;
+            if (supplier.state === 'at-risk') supplier.state = 'healthy';
           }
+
           s.setNodeFlash(node.id, 'green');
-          setTimeout(() => s.setNodeFlash(node.id, null), 600);
+          setTimeout(() => {
+            useSimStore.getState().setNodeFlash(node.id, null);
+          }, 600);
         });
       }, 3000 + i * 120);
     });
@@ -373,23 +413,32 @@ export function triggerChainBridgeActive(
 
   setTimeout(() => {
     const store3 = getStore();
-    const displacedCount = store3.nodes.filter(n =>
-      n.type !== 'anchor' && n.type !== 'competitor' && (n as SupplierNode).displacement_signal_fired
+    const displacedCount = store3.nodes.filter(
+      n =>
+        n.type !== 'anchor' &&
+        n.type !== 'competitor' &&
+        (n as SupplierNode).displacement_signal_fired
     ).length;
 
     setStore(s => {
       s.programmeHealth = s.programmeHealth.map(g => ({
         ...g,
-        value: Math.min(98, g.value + 15 + Math.random() * 10)
+        value: Math.min(98, g.value + 15 + Math.random() * 10),
       }));
+
       s.chainbridgeOutcome = {
         suppliers_reactivated: dormantUnaware.length,
         displacements_prevented: Math.round(displacedCount * 0.37),
-        volume_retained: Math.round(store3.nodes
-          .filter(n => n.type !== 'anchor' && n.type !== 'competitor')
-          .reduce((s, n) => s + ((n as SupplierNode).at_risk_volume_usd || 0), 0) * 0.37 / 1000),
+        volume_retained: Math.round(
+          store3.nodes
+            .filter(n => n.type !== 'anchor' && n.type !== 'competitor')
+            .reduce((sum, n) => sum + ((n as SupplierNode).at_risk_volume_usd || 0), 0) *
+            0.37 /
+            1000
+        ),
         rm_decision_time: '<48h',
       };
+
       s.simState = 'stable';
       s.addSignal({
         id: `sig-recovery-${Date.now()}`,
@@ -403,4 +452,6 @@ export function triggerChainBridgeActive(
   }, 5000);
 }
 
-export function getAnimState() { return animState; }
+export function getAnimState() {
+  return animState;
+}
