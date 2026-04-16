@@ -1,7 +1,7 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
 import ForceGraph2D from 'react-force-graph-2d';
 import { useSimStore } from '../store';
-import type { GraphNode, SupplierNode, AnchorNode, CompetitorNode } from '../types';
+import type { GraphNode } from '../types';
 
 const CORRIDOR_FLAGS: Record<string, string> = {
   India: '🇮🇳',
@@ -57,7 +57,13 @@ function drawAnchorNode(
   ctx.fill();
 
   const dpo = node.dpo_days || 50;
-  const ringColor = dpo > 60 ? '#FFB800' : 'rgba(0,100,200,0.6)';
+  const ringColor =
+    node.state === 'critical'
+      ? '#FF4444'
+      : node.state === 'at-risk' || dpo > 60
+      ? '#FFB800'
+      : 'rgba(0,100,200,0.6)';
+
   const dashOffset = -(frameTime / 16) * (dpo > 60 ? 0.15 : 0.06);
   ctx.beginPath();
   ctx.arc(x, y, r + 6, 0, Math.PI * 2);
@@ -91,7 +97,6 @@ function drawAnchorNode(
 function drawSupplierNode(
   ctx: CanvasRenderingContext2D,
   node: any,
-  frameTime: number,
   selected: boolean,
   flash: string | null,
   presentationMode: boolean,
@@ -114,9 +119,13 @@ function drawSupplierNode(
   }
 
   const glowColor =
-    state === 'healthy' ? 'rgba(0,255,135,0.1)' :
-    state === 'at-risk' ? 'rgba(255,184,0,0.1)' :
-    state === 'critical' ? 'rgba(255,68,68,0.13)' : 'rgba(107,114,128,0.07)';
+    state === 'healthy'
+      ? 'rgba(0,255,135,0.1)'
+      : state === 'at-risk'
+      ? 'rgba(255,184,0,0.1)'
+      : state === 'critical'
+      ? 'rgba(255,68,68,0.13)'
+      : 'rgba(107,114,128,0.07)';
 
   const glowG = ctx.createRadialGradient(x, y, 0, x, y, r * 3);
   glowG.addColorStop(0, glowColor);
@@ -207,7 +216,6 @@ function drawCompetitorNode(ctx: CanvasRenderingContext2D, node: any) {
   ctx.fillText('Bank', x, y + 5);
 }
 
-
 export default function GraphCanvas() {
   const graphRef = useRef<any>(null);
   const frameTimeRef = useRef(0);
@@ -221,25 +229,21 @@ export default function GraphCanvas() {
   const setSelectedNode = useSimStore(s => s.setSelectedNode);
   const setRightPanelTab = useSimStore(s => s.setRightPanelTab);
 
-  const [frameTime, setFrameTime] = useState(0);
-
   const graphDataRef = useRef<{ nodes: any[]; links: any[] }>({ nodes: [], links: [] });
   const [graphData, setGraphData] = useState(() => graphDataRef.current);
-
   const hasZoomed = useRef(false);
 
   useEffect(() => {
     if (storeNodes.length === 0) return;
 
-    const existingNodeMap = new Map<string, any>(graphDataRef.current.nodes.map((n: any) => [n.id, n]));
+    const existingNodeMap = new Map<string, any>(
+      graphDataRef.current.nodes.map((n: any) => [n.id, n])
+    );
 
     const newNodes = storeNodes.map((sn: any) => {
       const existing = existingNodeMap.get(sn.id);
       if (existing) {
-        existing.state = sn.state;
-        existing.dpo_days = sn.dpo_days;
-        existing.systemic_node_flag = sn.systemic_node_flag;
-        existing.at_risk_count = sn.at_risk_count;
+        Object.assign(existing, sn);
         return existing;
       }
       return { ...sn };
@@ -258,10 +262,7 @@ export default function GraphCanvas() {
       const key = `${srcId}__${tgtId}`;
       const existing = existingLinkMap.get(key);
       if (existing) {
-        existing.state = sl.state;
-        existing.particles = sl.particles;
-        existing.particle_speed = sl.particle_speed;
-        existing.particle_color = sl.particle_color;
+        Object.assign(existing, sl);
         return existing;
       }
       return { ...sl };
@@ -276,44 +277,42 @@ export default function GraphCanvas() {
           hasZoomed.current = true;
           graphRef.current.zoomToFit(600, 80);
         }
-      }, 3000);
+      }, 1500);
     }
   }, [storeNodes, storeLinks]);
 
   useEffect(() => {
-    let raf: number;
-    let lastUpdate = 0;
+    let raf = 0;
     const tick = (t: number) => {
       frameTimeRef.current = t;
       pulseRef.current = t / 500;
-      if (t - lastUpdate > 33) {
-        lastUpdate = t;
-        setFrameTime(t);
-      }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const drawNode = useCallback((node: any, ctx: CanvasRenderingContext2D) => {
-    const t = frameTimeRef.current;
-    const pulse = pulseRef.current;
-    const nodeId = node.id;
-    const flash = nodeFlashes[nodeId] || null;
-    const isSelected = selectedNode?.id === nodeId;
+  const drawNode = useCallback(
+    (node: any, ctx: CanvasRenderingContext2D) => {
+      const t = frameTimeRef.current;
+      const pulse = pulseRef.current;
+      const nodeId = node.id;
+      const flash = nodeFlashes[nodeId] || null;
+      const isSelected = selectedNode?.id === nodeId;
 
-    if (node.type === 'anchor') {
-      drawAnchorNode(ctx, node, t, flash);
-    } else if (node.type === 'competitor') {
-      drawCompetitorNode(ctx, node);
-    } else {
-      drawSupplierNode(ctx, node, t, isSelected, flash, presentationMode, pulse);
-    }
-  }, [selectedNode, presentationMode, nodeFlashes, frameTime]);
+      if (node.type === 'anchor') {
+        drawAnchorNode(ctx, node, t, flash);
+      } else if (node.type === 'competitor') {
+        drawCompetitorNode(ctx, node);
+      } else {
+        drawSupplierNode(ctx, node, isSelected, flash, presentationMode, pulse);
+      }
+    },
+    [selectedNode, presentationMode, nodeFlashes]
+  );
 
   const getLinkParticles = useCallback((link: any): number => link.particles ?? 0, []);
-  const getLinkParticleWidth = useCallback((_: any): number => 2, []);
+  const getLinkParticleWidth = useCallback((): number => 2, []);
   const getLinkParticleSpeed = useCallback((link: any): number => link.particle_speed ?? 0.004, []);
   const getLinkParticleColor = useCallback((link: any): string => link.particle_color ?? '#00FF87', []);
 
@@ -333,14 +332,17 @@ export default function GraphCanvas() {
 
   const getLinkCurvature = useCallback((link: any): number => link.curvature ?? 0, []);
 
-  const handleNodeClick = useCallback((node: any) => {
-    const storeNode = useSimStore.getState().nodes.find(n => n.id === node.id) || node;
-    setSelectedNode(storeNode as GraphNode);
-    setRightPanelTab('inspector');
-    if (graphRef.current) {
-      graphRef.current.centerAt(node.x, node.y, 800);
-    }
-  }, [setSelectedNode, setRightPanelTab]);
+  const handleNodeClick = useCallback(
+    (node: any) => {
+      const storeNode = useSimStore.getState().nodes.find(n => n.id === node.id) || node;
+      setSelectedNode(storeNode as GraphNode);
+      setRightPanelTab('inspector');
+      if (graphRef.current) {
+        graphRef.current.centerAt(node.x, node.y, 800);
+      }
+    },
+    [setSelectedNode, setRightPanelTab]
+  );
 
   const handleNodeHover = useCallback((node: any) => {
     if (typeof document !== 'undefined') {
@@ -388,10 +390,15 @@ export default function GraphCanvas() {
   useEffect(() => {
     const update = () => {
       if (containerRef.current) {
-        setDims({ w: containerRef.current.clientWidth, h: containerRef.current.clientHeight });
+        setDims({
+          w: containerRef.current.clientWidth,
+          h: containerRef.current.clientHeight,
+        });
       }
     };
+
     update();
+
     const ro = new ResizeObserver(update);
     if (containerRef.current) ro.observe(containerRef.current);
     return () => ro.disconnect();
